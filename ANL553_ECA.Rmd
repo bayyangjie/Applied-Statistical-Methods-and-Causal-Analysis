@@ -1,0 +1,349 @@
+---
+title: "ANL553_ECA"
+output: word_document
+date: "2023-11-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# installing packages
+
+install.packages("Information")
+install.packages("readr")
+
+
+# Loading packages
+
+```{r}
+library(tidyverse)
+library(haven)
+library(estimatr)
+library(plm)
+library(dplyr)
+library(Information)
+library(ggplot2)
+library(tidyr)
+library(readr)
+library(stats)
+```
+
+# Setting working directory
+```{r}
+setwd("/Users/ASUS/Library/CloudStorage/OneDrive-Personal/Desktop/SUSS/ANL553/ECA")
+```
+
+# reading data
+```{r}
+readr::read_csv("eca_data.csv") -> eca_data
+```
+
+# 1a - EDA
+
+## understanding structure of dataset (class, length , content)
+```{r}
+str(eca_data)
+```
+
+# checking for NULL values
+```{r}
+null_check <- sapply(eca_data, function(x) any(sapply(x, is.null)))
+print(null_check)
+```
+
+# checking class type of dataset
+```{r}
+class(eca_data$pop)
+class(eca_data$numsales)
+class(eca_data$storeid)
+class(eca_data$day)
+```
+
+# summary statistics of dataset columns
+```{r}
+summary(eca_data$pop)
+```
+
+# Group the data by "storeid" and calculate mean sales of each storeid
+```{r}
+eca_data_grouped <- eca_data %>% group_by(storeid)
+eca_data_grouped
+eca_data_summary <- eca_data_grouped %>% summarize(Mean_sales=mean(numsales))
+eca_data_summary
+```
+
+# getting min and max values of mean_sales column
+```{r}
+min_value <- min(eca_data_summary$Mean_sales)
+min_value
+max_value <- max(eca_data_summary$Mean_sales)
+max_value
+```
+
+# getting the storeids of the min and max mean sales values
+```{r}
+index_max <- which.max(eca_data_summary$Mean_sales)
+index_min <- which.min(eca_data_summary$Mean_sales)
+
+id_max <- eca_data_summary$storeid[index_max]
+id_max
+id_min <- eca_data_summary$storeid[index_min]
+id_min
+```
+
+# grouping by storeids and the population size of region near supermarket
+```{r}
+eca_data_grouped_pop <- eca_data %>% group_by(storeid, pop ) %>% distinct(storeid, pop)
+eca_data_grouped_pop
+```
+
+# getting min and max values of pop column
+```{r}
+min_pop_value <- min(eca_data_grouped_pop$pop)
+min_pop_value
+max_pop_value <- max(eca_data_grouped_pop$pop)
+max_pop_value
+```
+
+# finding the storeid of the lowest/highest population region around the supermarket
+```{r}
+index_max <- which.max(eca_data_grouped_pop$pop)
+index_min <- which.min(eca_data_grouped_pop$pop)
+
+id_maximum <- eca_data_summary$storeid[index_max]
+id_maximum
+id_minimum <- eca_data_summary$storeid[index_min]
+id_minimum
+```
+
+# calculating total sales over 15 days for each storeid
+```{r}
+sum_sales <- eca_data %>%
+  group_by(storeid) %>%
+  summarize(sumvalue = sum(numsales, na.rm = TRUE))
+sum_sales
+```
+
+# comparing average sales of each management team (i.e groups of 50)
+
+## specifying the rows numbers for each set
+```{r}
+set1_rows <- 1:50
+set2_rows <- 51:100
+set3_rows <- 101:150
+set4_rows <- 151:200
+
+average_sales <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), function(rows) {
+  rowMeans(sum_sales[rows, "sumvalue"])
+})
+average_sales
+```
+
+## calculating the mean of each column (which represents each management team)
+```{r}
+final_result <- colMeans(average_sales) 
+final_result
+```
+
+# creating visualization to show average sales of each management team
+```{r}
+names(average_sales) <- c("Team1" , "Team2", "Team3", "Team4")
+
+as.data.frame(average_sales) -> average_sales
+
+long_data <- average_sales %>%
+  gather(category, value)
+
+long_data_mean <- long_data %>%
+  group_by(category) %>%
+  summarize(meanvalue=mean(value))
+
+ggplot(long_data_mean, aes(x = category, y = meanvalue ,color=category)) +
+  geom_point() +
+  labs(x = "Categories", y = "Mean Values") +
+  ggtitle("Mean sales figures of each management team")+ 
+  geom_text(aes(label=meanvalue , vjust=-0.5) , size=3.5)+
+  theme(legend.position ='None',
+        axis.title.x=element_text(size=12),
+        axis.title.y=element_text(size=12))
+```
+
+# population mean by each group of 50 storeids managed by each of the 4 teams
+```{r}
+set1_rows <- 1:50
+set2_rows <- 51:100
+set3_rows <- 101:150
+set4_rows <- 151:200
+
+pop_group_teams <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), function(rows) {
+  rowMeans(eca_data_grouped_pop[rows, "pop"])
+})
+
+result <- colMeans(pop_group_teams) 
+result
+```
+
+# visualization of the population mean of each team
+
+## converting pop_group_teams to a dataframe format
+```{r}
+as.data.frame(pop_group_teams) -> pop_group_teams 
+is.data.frame(pop_group_teams)
+```
+
+## converting the column names of “pop_group_teams” table
+```{r}
+names(pop_group_teams) <- c("Team1" , "Team2", "Team3", "Team4")
+```
+
+## converting to long format
+```{r}
+a <- pop_group_teams %>%
+  gather(category, value)
+```
+
+## grouping by the different teams and their mean population values
+```{r}
+a_mean <- a %>%
+  group_by(category) %>%
+  summarize(meanvalue=mean(value))
+a_mean
+```
+
+## plotting scatterplot
+```{r}
+ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
+  geom_point() +
+  labs(
+    x = "Teams",
+    y = "Mean population value",
+    title = "Population mean of storeids of each team",
+    subtitle = "50 storeids under each team"
+  ) + 
+  geom_text(aes(label = meanvalue, hjust =1.2)) +
+  theme(
+    axis.title.x = element_text(size = 12, margin = margin(t = 20)),
+    axis.title.y = element_text(size = 12, margin = margin(r = 20)),
+    legend.position = "None"
+  )
+```
+
+# (1b) - Evaluating empirical approaches: Linear regression
+
+## Creating binary outputs column
+```{r}
+# binary output column indicates whether discount was applied or not (i.e '1' for days 8/9 , '0' otherwise)
+binary_tbl <- eca_data %>%
+  mutate(Discount_Applied = ifelse(
+    (day >= 8 & day <= 9) & (storeid >= 1 & storeid <= 50), 1, 0
+  ))
+```
+In the binary table, there is a dummy column generated that indicates 1 for discount that is applied on days 8 and 9 for each storeid.
+
+## Regressing only against discount applied
+```{r}
+lm_model1 <- lm(numsales ~ Discount_Applied , binary_tbl)
+summary(lm_model1)
+```
+From the lm() output, for every 10% increase in discount, the sales in the dairy product is increased by 151.331. The output also shows that the estimated y-intercept value is 3086.389 if there were no discount applied.
+The p-value of 0.00443 is much lesser than the alpha significance level of 0.05, so this indicates a statistically significant relationship between the outcome "numsales" and the "Discount_Applied" variables.
+
+## Regressing against discount applied , population , Discount_Applied*pop
+```{r}
+lm_model3 <- lm(numsales ~ Discount_Applied + pop + Discount_Applied*pop , binary_tbl)
+summary(lm_model3)
+```
+The coefficient estimates of "Discount_Applied" & "pop" both increased with "Discount_Applied" increasing the most significantly after introducing the introducing the interaction term of "Discount_Applied * pop". Additionally, the p-value of the interaction term is < 0.05. All of these suggests that the relationship between numsales and discount applied is also affected by the presence of the population variable.
+On the other hand, in terms of p-values, after introducing the interaction term, the p-values of the predictor variables "Discount_Applied" (0.00443 > 0.036) and "pop" (2.73e-06 > 1.7e-05) both increased by a fair amount. While the p-values still remain < 0.05 (still statistically significant) , the increase in p-value could suggest that the predictor variables become less statistically significant in the presence of the interaction term.
+
+# (1b) - Evaluating empirical approaches: Difference in Differences
+```{r}
+formula <- numsales ~ Discount_Applied + day*Discount_Applied
+# time variable is not converted to factor because time is measured in days (continuous numeric scale)
+did_model <- lm(formula , binary_tbl)
+summary(did_model)
+```
+The DID coefficient is denoted by "day:Discount_Applied". The negative value of -3.781 suggests that the treatment (i.e discount) has led to a decrease in the outcome variable for the treated group compared to control group over time.
+
+The p-value of the DID coefficient is > 0.05 which makes the interaction term not statistically significant. This means that we are unable to conclude that the treatment has a significant effect on 'numsales' over time.
+
+DID model in this case may not be suitable since it is not investigating changes over time of a treatment effect. The study also does not involve time-invariant factors for establishing causality. Linear model method can be used for providing valuable insights into pre and post treatment changes.
+
+# (1b) - Evaluating empirical approaches: Fixed Effects regression approach
+```{r}
+binary_tbl_1 <- binary_tbl %>%
+  mutate(Discount_group = ifelse(
+    (storeid >= 1 & storeid <= 50), 1, 0
+  ))
+
+FE_model <- lm(numsales ~ Discount_Applied + Discount_group + day + pop , binary_tbl_1)
+summary(FE_model)
+```
+In binary_tbl_1, a new column "Discount_group" is created. This column is a binary column that clusters the entity-specific column "storeid" into binary value '1' (cluster of storeids 1 to 50 that had discount applied on days 8 & 9) and binary value '0' (cluster of storeids 51 to 200 that had no discounts applied at all).
+
+The purpose of creating the entity-specific dummy variable is to account for unobserved heterogeneity specific to the entity, enabling us to isolate within-entity variation and study the effects of independent variables more rigorously in a fixed effects regression analysis.
+
+We can see from the output that the treatment effect "Discount_Applied" here is not statistically significant (i.e 0.2503 > 0.05). This could mean that there may still be unobserved or unaccounted-for confounding factors that influence the outcome even though fixed effects should help control for variations that are specific to the entity (i.e 'storeid' in this case). These factors could confound the relationship between the treatment and the outcome.
+
+Selection of approach:
+Fixed effects regression approach would be the most ideal for this study. The dataset is in the form of a panel data format since the observations are repeated/multiple for the same units over time. Fixed effect also helps to control for variations that are specific to each entity. This isolates the impact of intervention within entity over time allowing for a more robust study on how the predictor variables will affect the response variable.
+
+
+# (1c) Hypothesis testing - FE model
+```{r}
+FE_model <- lm(numsales ~ Discount_Applied + Discount_group + day + pop , binary_tbl_1)
+summary(FE_model)
+
+# Find the critical t-values of required coefficients
+qt(p=.05/2, df=2995, lower.tail=FALSE) # DOF same for all coefficients because the y-int is common to all 
+```
+Construct Testable Hypotheses:
+Null hypothesis - There is no significant effect of how sales of storeids 1 to 50 is affected by the 10% discount.
+
+Alternative Hypothesis (H1): The 10% discount varies has a significant impact on sales for those storeids that had the discount applied on days 8 and 9.
+
+Interpret the Results:
+
+t-critical = 1.960756
+
+In terms of t-value study,
+
+The t-values for all the coefficients are greater than the t-critical except for 'Discount_Applied' (1.15). This means that the coefficient of the treatment effect is not statistically significant. This could be due to other confounding factors that compromise the impact of the treatment on the outcome. 
+
+The t-value of the fixed effect binary coefficient "Discount_group" (4.814) is more than the t-critical. This shows that there is significant increase in the sales outcome when there is discount applied on days 8 and 9 for storeids 1 to 50. 
+
+
+In terms of p-value study,
+
+The p-value for the treatment effect 'Discount_Applied' is the only one that is greater than 0.05. "Discount_group" p-value is smaller than 0.05 (1.55e-06). This suggests that the treatment effect is not statistically significant while the fixed effects coefficient is statistically significant. 
+
+In summary, since the fixed effects coefficient is shown to be statistically significant as compared to the treatment effect , it further supports the possibility that there could be other confounding factors that could potentially have stronger effects that could contribute to the increase in sales. For example, that particular brand of dairy product could also have recently introduced a new flavour that is popular among the customers leading to an increase in sales. 
+
+
+# (1d)
+The following changes would have to be implemented now that instead of a discount, we are replacing it with the effect of the expert' speech
+- the treatment effect here would be the expert's speech which is named as "Speech" for the coefficient variable name
+- similarly, a binary variable needs to be created but in this case it is with reference to whether a speech was made (1) or not (0)
+- a new dataset would need to be collected and given the name 'new_tbl'
+
+Data collection:
+- Collect data on the dates and times of the nutrition expert's speeches, locations, and any relevant information about the speeches. Data collection on the sales should still be collected during this period.
+
+Regression Analysis:
+- linear model in this case would not be useful because the only way to observe the effects of the expert's speech is through time, only then can we tell the effects of the speech on product sales. It is different from the existing scenario where selected days/records had been chosen for the treatment to be applied. 
+- In this scenario, fixed effects regression model would be suitable as it considers both cross-sectional variation (across different stores) and temporal variation (over time). And including a binary variable is needed to indicate whether a speech occurred or not. 
+
+Threats to Validity:
+
+Endogeneity
+- There may be endogeneity if the decision to have a nutrition expert's speech is influenced by sales. This can be resolved by using Instrumental Variable approach to isolate the causal effect.
+
+Confounding factors
+- Confounding factors such as prommotions, external events may impact sales. These factors should be controlled in the model to isolate the effect of the speech treatment effect. 
+
+Sampling bias
+- The updated sample dataset of the stores used in the analysis should be representative of the population we want to draw conclusions about.
+
+
+
