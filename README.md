@@ -23,4 +23,3 @@ Difference-in-Difference:
 
 Fixed effects:
 ![Image 6](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Fixed%20effects1.png?raw=true)
-
