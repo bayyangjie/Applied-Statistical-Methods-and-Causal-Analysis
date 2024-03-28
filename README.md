@@ -19,7 +19,7 @@ Linear regression (regressing against discount applied, population and interacti
 ![Image 4](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/linear%20regression1.png?raw=true) <br> <br>
 
 Difference-in-Difference:
-![Image 5](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/diff_in_diff.png?raw=true) <br> <br>
+![Image 5](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/diff_in_diff.png?raw=true width="400") <br> <br>
 
 Fixed effects:
 ![Image 6](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Fixed%20effects1.png?raw=true)
