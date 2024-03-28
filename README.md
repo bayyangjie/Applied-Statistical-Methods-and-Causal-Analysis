@@ -1,6 +1,6 @@
 # Applied-Statistical-Methods-and-Causal-Analysis
 
-## Background of project:
+## Background of project
 - Performed EDA on dataset to gain a better understanding of the data structure and identify key trends
 - Evaluated suitability of empirical approaches such as linear regression, fixed effects, difference-in-difference to study the effects of a treatment effect on the response variable
 - Constructing and testing of null hypothesis using the most ideal empirical approach
