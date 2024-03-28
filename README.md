@@ -5,13 +5,14 @@
 - Evaluated suitability of empirical approaches such as linear regression, fixed effects, difference-in-difference to study the effects of a treatment effect on the response variable
 - Constructing and testing of null hypothesis using the most ideal empirical approach
 
-
+## Visualizations
 Mean sales figure of each team:
 ![Image 1](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%202.png?raw=true) <br> <br>
 
 Population mean of storeids by team:
 ![Image 2](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%201.png?raw=true) <br> <br>
 
+## Statistical modelling
 Linear regression (regressing only against discount applied):
 ```
 lm_model1 <- lm(numsales ~ Discount_Applied , binary_tbl)
