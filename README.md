@@ -1,6 +1,7 @@
-# Applied-Statistical-Methods-and-Causal-Analysis
+## Project objective
+- To evaluate the effect of a treatment effect (price discount) on the response variable (sales of products)
 
-## Background of project
+## What was done
 - Performed EDA on dataset to gain a better understanding of the data structure and identify key trends
 - Evaluated suitability of empirical approaches such as linear regression, fixed effects, difference-in-difference to study the effects of a treatment effect on the response variable
 - Constructing and testing of null hypothesis using the most ideal empirical approach
