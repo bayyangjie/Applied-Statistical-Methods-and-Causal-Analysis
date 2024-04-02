@@ -10,9 +10,179 @@
 Data quality checks such as checking for missing values, and verifying the correct class of the variables. Descriptive statistical and mathematical functions were also utilized for obtaining the mean, maximum and minimum values of the variables. Functions such as str() were also used to understand the dataset's structure.
 Employing the ggplot2 package, visualizations were created to gain an understanding of the relationships between variables.
 
+```
+# reading in the data
+readr::read_csv("eca_data.csv") -> eca_data
+
+## understanding structure of dataset (class, length , content)
+str(eca_data)
+```
+output:
+ storeid      day      pop numsales 
+   FALSE    FALSE    FALSE    FALSE 
+
+```
+# checking class type of dataset
+class(eca_data$pop)
+class(eca_data$numsales)
+class(eca_data$storeid)
+class(eca_data$day)
+```
+[1] "numeric"
+[1] "numeric"
+[1] "numeric"
+[1] "numeric"
+
+```
+# summary statistics of dataset columns
+summary(eca_data$pop)
+```
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  95016   97644  100098   99977  102126  104804 
+
+```
+# Group the data by "storeid" and calculate mean sales of each storeid
+eca_data_grouped <- eca_data %>% group_by(storeid)
+eca_data_grouped
+eca_data_summary <- eca_data_grouped %>% summarize(Mean_sales=mean(numsales))
+eca_data_summary
+```
+
+storeid
+<dbl>
+Mean_sales
+<dbl>
+1	3538.467			
+2	3103.533			
+3	3370.267			
+4	3152.933			
+5	3224.533			
+6	3993.933			
+7	4459.133			
+8	2785.200			
+9	3157.933			
+10	3870.000			
+...
+1-10 of 200 rows
+
+# getting min and max values of mean_sales column
+```
+min_value <- min(eca_data_summary$Mean_sales)
+min_value
+max_value <- max(eca_data_summary$Mean_sales)
+max_value
+```
+
+[1] 1647.867
+[1] 4555.4
+
+# getting the storeids of the min and max mean sales values
+```
+index_max <- which.max(eca_data_summary$Mean_sales)
+index_min <- which.min(eca_data_summary$Mean_sales)
+
+id_max <- eca_data_summary$storeid[index_max]
+id_max
+id_min <- eca_data_summary$storeid[index_min]
+id_min
+```
+[1] 112
+[1] 177
+
+# grouping by storeids and the population size of region near supermarket
+```
+eca_data_grouped_pop <- eca_data %>% group_by(storeid, pop ) %>% distinct(storeid, pop)
+eca_data_grouped_pop
+```
+storeid
+<dbl>
+pop
+<dbl>
+1	95213			
+2	96402			
+3	99378			
+4	102230			
+5	96037			
+6	101903			
+7	98094			
+8	99929			
+9	95410			
+10	97653			
+...
+1-10 of 200 rows
+
+# getting min and max values of pop column
+```
+min_pop_value <- min(eca_data_grouped_pop$pop)
+min_pop_value
+max_pop_value <- max(eca_data_grouped_pop$pop)
+max_pop_value
+```
+[1] 95016
+[1] 104804
+
+# finding the storeid of the lowest/highest population region around the supermarket
+```
+index_max <- which.max(eca_data_grouped_pop$pop)
+index_min <- which.min(eca_data_grouped_pop$pop)
+
+id_maximum <- eca_data_summary$storeid[index_max]
+id_maximum
+id_minimum <- eca_data_summary$storeid[index_min]
+id_minimum
+```
+[1] 75
+[1] 64
+
+# calculating total sales over 15 days for each storeid
+```
+sum_sales <- eca_data %>%
+  group_by(storeid) %>%
+  summarize(sumvalue = sum(numsales, na.rm = TRUE))
+sum_sales
+```
+storeid
+<dbl>
+sumvalue
+<dbl>
+1	53077			
+2	46553			
+3	50554			
+4	47294			
+5	48368			
+6	59909			
+7	66887			
+8	41778			
+9	47369			
+10	58050			
+...
+1-10 of 200 rows
+
+# comparing average sales of each management team (i.e groups of 50)
+
+## specifying the rows numbers for each set
+```
+set1_rows <- 1:50
+set2_rows <- 51:100
+set3_rows <- 101:150
+set4_rows <- 151:200
+
+average_sales <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), function(rows) {
+  rowMeans(sum_sales[rows, "sumvalue"])
+})
+average_sales
+```
+
+# calculating the mean of each column (which represents each management team)
+```{r}
+final_result <- colMeans(average_sales) 
+final_result
+```
+[1] 47696.10 46195.34 45974.98 45619.58
+
 # Visualization - Means sales figure per team
 
-```{r}
+```
 names(average_sales) <- c("Team1" , "Team2", "Team3", "Team4")
 
 as.data.frame(average_sales) -> average_sales
