@@ -7,6 +7,9 @@
 - Constructing and testing of null hypothesis using the most ideal empirical approach
 
 ## Visualizations
+
+ggplot2 package was also employed to create visualizations for gaining a better understanding of the key variables.
+
 Mean sales figure of each team:
 ![Image 1](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%202.png?raw=true) <br> <br>
 
@@ -14,6 +17,9 @@ Population mean of storeids by team:
 ![Image 2](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%201.png?raw=true) <br> <br>
 
 ## Statistical modelling
+
+Using the 'stats' package in R, simple linear regression was performed to determine the effect of discount alone on the response variable 'sales', multiple linear regression was also performed to determine the effect of multiple variables on 'sales'. Analytical insights about the correlation between the predictor variables and response variable were then formulated based on the magnitude of the p-values and coefficient estimates of each predictor variable. These insights included understanding which predictor variable had the most and least impact on the response variable as well as the significance of each predictor variable.
+
 Linear regression (regressing only against discount applied):
 ```
 lm_model1 <- lm(numsales ~ Discount_Applied , binary_tbl)
