@@ -202,7 +202,6 @@ ggplot(long_data_mean, aes(x = category, y = meanvalue ,color=category)) +
         axis.title.y=element_text(size=12))
 ```
 
-Mean sales figure of each team:
 ![Image 1](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%202.png?raw=true) <br> <br>
 
 Different category names are created and assigned to each Team that handles 50 storeids each. The sales of each of the 4 teams that handle 50 storeids each are then calculated and summarized under the variable 'meanvalue'. A scatterplot was then plotted to show the relationship between the mean sales figures of each team. The different colours of each point are then filled according to each team category.
@@ -272,9 +271,9 @@ ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
     legend.position = "None"
   )
 ```
-Scatterplot creation of the mean population size of the storeids under each region. The scatterplot shows that the storeids under Team1 are in a region that has the highest population mean. 'Category' which represents the different Teams is passed into the aes() function of ggplot() to use colour to define the points by different colours.
-
 ![Image 2](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%201.png?raw=true) <br> <br>
+
+Scatterplot creation of the mean population size of the storeids under each region. The scatterplot shows that the storeids under Team1 are in a region that has the highest population mean. 'Category' which represents the different Teams is passed into the aes() function of ggplot() to use colour to define the points by different colours.
 
 
 ## Statistical modelling
