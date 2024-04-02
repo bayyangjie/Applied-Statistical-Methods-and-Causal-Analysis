@@ -117,6 +117,9 @@ Linear regression (regressing only against discount applied):
 lm_model1 <- lm(numsales ~ Discount_Applied , binary_tbl)
 summary(lm_model1)
 ```
+From the lm() output, for every 10% increase in discount, the sales in the dairy product is increased by 151.331. The output also shows that the estimated y-intercept value is 3086.389 if there were no discount applied.
+The p-value of 0.00443 is much lesser than the alpha significance level of 0.05, so this indicates a statistically significant relationship between the outcome "numsales" and the "Discount_Applied" variables.
+
 ![Image 3](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/linear%20regressoin2.png?raw=true) <br> <br>
 
 Linear regression (regressing against discount applied, population and interaction term 'Discount_Applied*pop'):
@@ -124,6 +127,9 @@ Linear regression (regressing against discount applied, population and interacti
 lm_model3 <- lm(numsales ~ Discount_Applied + pop + Discount_Applied*pop , binary_tbl)
 summary(lm_model3)
 ```
+The coefficient estimates of "Discount_Applied" & "pop" both increased with "Discount_Applied" increasing the most significantly after introducing the interaction term of "Discount_Applied * pop". Additionally, the p-value of the interaction term is < 0.05. This suggests that the relationship between numsales and discount applied is also affected by the presence of the population variable.
+In terms of p-values, after introducing the interaction term, the p-values of the predictor variables "Discount_Applied" (0.00443 > 0.036) and "pop" (2.73e-06 > 1.7e-05) both increased by a fair amount. While the p-values still remain < 0.05, the increase in p-value could suggest that the predictor variables become less statistically significant in the presence of the interaction term.
+
 ![Image 4](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/linear%20regression1.png?raw=true) <br> <br>
 
 Difference-in-Difference:
@@ -133,6 +139,12 @@ formula <- numsales ~ Discount_Applied + day*Discount_Applied
 did_model <- lm(formula , binary_tbl)
 summary(did_model)
 ```
+The DID coefficient is denoted by "day:Discount_Applied". The negative value of -3.781 suggests that the treatment (i.e discount) has led to a decrease in the outcome variable for the treated group compared to control group over time.
+
+The p-value of the DID coefficient is > 0.05 which makes the interaction term not statistically significant. This means that we are unable to conclude that the treatment has a significant effect on 'numsales' over time.
+
+DID model in this case may not be suitable since it is not investigating changes over time of a treatment effect. The study also does not involve time-invariant factors for establishing causality. Linear model method can be used for providing valuable insights into pre and post treatment changes.
+
 ![Image 5](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/difference-in-difference.png?raw=true) <br> <br>
 
 Fixed effects:
@@ -145,4 +157,10 @@ binary_tbl_1 <- binary_tbl %>%
 FE_model <- lm(numsales ~ Discount_Applied + Discount_group + day + pop , binary_tbl_1)
 summary(FE_model)
 ```
+In binary_tbl_1, a new column "Discount_group" is created. This column is a binary column that clusters the entity-specific column "storeid" into binary value '1' (cluster of storeids 1 to 50 that had discount applied on days 8 & 9) and binary value '0' (cluster of storeids 51 to 200 that had no discounts applied at all).
+
+The purpose of creating the entity-specific dummy variable is to account for unobserved heterogeneity specific to the entity, enabling us to isolate within-entity variation and study the effects of independent variables more rigorously in a fixed effects regression analysis.
+
+We can see from the output that the treatment effect "Discount_Applied" here is not statistically significant (i.e 0.2503 > 0.05). This could mean that there may still be unobserved or unaccounted-for confounding factors that influence the outcome even though fixed effects should help control for variations that are specific to the entity (i.e 'storeid' in this case). These factors could confound the relationship between the treatment and the outcome.
+
 ![Image 6](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/fe.png?raw=true)
