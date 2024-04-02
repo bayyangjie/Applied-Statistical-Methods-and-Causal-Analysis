@@ -6,9 +6,9 @@
 - Evaluated suitability of empirical approaches such as linear regression, fixed effects, difference-in-difference to study the effects of a treatment effect on the response variable
 - Constructing and testing of null hypothesis using the most ideal empirical approach
 
-## Visualizations
-
-ggplot2 package was also employed to create visualizations for gaining a better understanding of the key variables.
+## Data understanding
+Data quality checks such as checking for missing values, and verifying the correct class of the variables. Descriptive statistical and mathematical functions were also utilized for obtaining the mean, maximum and minimum values of the variables. Functions such as str() were also used to understand the dataset's structure.
+Employing the ggplot2 package, visualizations were created to gain an understanding of the relationships between variables.
 
 Mean sales figure of each team:
 ![Image 1](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%202.png?raw=true) <br> <br>
