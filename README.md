@@ -17,7 +17,6 @@ readr::read_csv("eca_data.csv") -> eca_data
 ## understanding structure of dataset (class, length , content)
 str(eca_data)
 ```
-output:
  storeid      day      pop numsales 
    FALSE    FALSE    FALSE    FALSE 
 
