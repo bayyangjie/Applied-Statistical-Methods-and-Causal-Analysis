@@ -6,7 +6,7 @@
 - Evaluated suitability of empirical approaches such as linear regression, fixed effects, difference-in-difference to study the effects of a treatment effect on the response variable
 - Constructing and testing of null hypothesis using the most ideal empirical approach
 
-## Data understanding
+### Data understanding
 Data quality checks such as checking for missing values, and verifying the correct class of the variables. Descriptive statistical and mathematical functions were also utilized for obtaining the mean, maximum and minimum values of the variables. Functions such as str() were also used to understand the dataset's structure.
 Employing the ggplot2 package, visualizations were created to gain an understanding of the relationships between variables.
 
@@ -179,9 +179,8 @@ final_result
 ```
 [1] 47696.10 46195.34 45974.98 45619.58
 
-
+### Visualization -  Mean sales per team
 ```
-# Visualization - Means sales figure per team
 names(average_sales) <- c("Team1" , "Team2", "Team3", "Team4")
 
 as.data.frame(average_sales) -> average_sales
@@ -208,7 +207,7 @@ Mean sales figure of each team:
 
 Different category names are created and assigned to each Team that handles 50 storeids each. The sales of each of the 4 teams that handle 50 storeids each are then calculated and summarized under the variable 'meanvalue'. A scatterplot was then plotted to show the relationship between the mean sales figures of each team. The different colours of each point are then filled according to each team category.
 
-#### Visualization - Region population mean of storeids under each team
+### Visualization - Region population mean of storeids under each team
 ```
 # population mean by each group of 50 storeids managed by each team
 set1_rows <- 1:50
@@ -255,8 +254,8 @@ a_mean
 ```
 Creating custom labels for each of the four columns and summarizing the population mean of the storeids under each Team category. 
 
-#### Visualization - Population mean of region per cluster of storeids  
 ```
+# Plotting 
 ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
   geom_point() +
   labs(
