@@ -170,9 +170,7 @@ average_sales <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), functi
   rowMeans(sum_sales[rows, "sumvalue"])
 })
 average_sales
-```
 
-```
 # calculating the mean of each column (which represents each management team)
 final_result <- colMeans(average_sales) 
 final_result
