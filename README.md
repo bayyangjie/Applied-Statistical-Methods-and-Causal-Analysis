@@ -65,8 +65,8 @@ Mean_sales
 ...
 1-10 of 200 rows
 
-# getting min and max values of mean_sales column
 ```
+# getting min and max values of mean_sales column
 min_value <- min(eca_data_summary$Mean_sales)
 min_value
 max_value <- max(eca_data_summary$Mean_sales)
@@ -76,8 +76,8 @@ max_value
 [1] 1647.867
 [1] 4555.4
 
-# getting the storeids of the min and max mean sales values
 ```
+# getting the storeids of the min and max mean sales values
 index_max <- which.max(eca_data_summary$Mean_sales)
 index_min <- which.min(eca_data_summary$Mean_sales)
 
@@ -89,8 +89,8 @@ id_min
 [1] 112
 [1] 177
 
-# grouping by storeids and the population size of region near supermarket
 ```
+# grouping by storeids and the population size of region near supermarket
 eca_data_grouped_pop <- eca_data %>% group_by(storeid, pop ) %>% distinct(storeid, pop)
 eca_data_grouped_pop
 ```
@@ -111,8 +111,8 @@ pop
 ...
 1-10 of 200 rows
 
-# getting min and max values of pop column
 ```
+# getting min and max values of pop column
 min_pop_value <- min(eca_data_grouped_pop$pop)
 min_pop_value
 max_pop_value <- max(eca_data_grouped_pop$pop)
@@ -121,8 +121,8 @@ max_pop_value
 [1] 95016
 [1] 104804
 
-# finding the storeid of the lowest/highest population region around the supermarket
 ```
+# finding the storeid of the lowest/highest population region around the supermarket
 index_max <- which.max(eca_data_grouped_pop$pop)
 index_min <- which.min(eca_data_grouped_pop$pop)
 
@@ -134,8 +134,8 @@ id_minimum
 [1] 75
 [1] 64
 
-# calculating total sales over 15 days for each storeid
 ```
+# calculating total sales over 15 days for each storeid
 sum_sales <- eca_data %>%
   group_by(storeid) %>%
   summarize(sumvalue = sum(numsales, na.rm = TRUE))
@@ -158,10 +158,10 @@ sumvalue
 ...
 1-10 of 200 rows
 
-# comparing average sales of each management team (i.e groups of 50)
 
-## specifying the rows numbers for each set
 ```
+# comparing average sales of each management team (i.e groups of 50)
+## specifying the rows numbers for each set
 set1_rows <- 1:50
 set2_rows <- 51:100
 set3_rows <- 101:150
@@ -173,16 +173,16 @@ average_sales <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), functi
 average_sales
 ```
 
+```
 # calculating the mean of each column (which represents each management team)
-```{r}
 final_result <- colMeans(average_sales) 
 final_result
 ```
 [1] 47696.10 46195.34 45974.98 45619.58
 
-# Visualization - Means sales figure per team
 
 ```
+# Visualization - Means sales figure per team
 names(average_sales) <- c("Team1" , "Team2", "Team3", "Team4")
 
 as.data.frame(average_sales) -> average_sales
@@ -209,7 +209,7 @@ Mean sales figure of each team:
 
 Different category names are created and assigned to each Team that handles 50 storeids each. The sales of each of the 4 teams that handle 50 storeids each are then calculated and summarized under the variable 'meanvalue'. A scatterplot was then plotted to show the relationship between the mean sales figures of each team. The different colours of each point are then filled according to each team category.
 
-# Visualization - Region population mean of storeids under each team
+#### Visualization - Region population mean of storeids under each team
 ```
 # population mean by each group of 50 storeids managed by each team
 set1_rows <- 1:50
@@ -256,6 +256,7 @@ a_mean
 ```
 Creating custom labels for each of the four columns and summarizing the population mean of the storeids under each Team category. 
 
+#### Visualization - Population mean of region per cluster of storeids  
 ```
 ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
   geom_point() +
