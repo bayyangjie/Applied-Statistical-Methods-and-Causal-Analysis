@@ -221,17 +221,19 @@ pop_group_teams <- sapply(list(set1_rows, set2_rows, set3_rows, set4_rows), func
 
 result <- colMeans(pop_group_teams) 
 result
-## [1] 100065.6  99885.6  99920.7 100036.6
 ```
+[1] 100065.6  99885.6  99920.7 100036.6
+
 Each column represents the population mean of the storeids handled by each team
 
 ```
 # converting pop_group_teams to a dataframe format
 as.data.frame(pop_group_teams) -> pop_group_teams 
 is.data.frame(pop_group_teams)
+```
+[1] TRUE
 
-## [1] TRUE
-
+```
 # converting the column names of “pop_group_teams” table
 names(pop_group_teams) <- c("Team1" , "Team2", "Team3", "Team4")
 converting to long format
@@ -243,19 +245,18 @@ a_mean <- a %>%
   group_by(category) %>%
   summarize(meanvalue=mean(value))
 a_mean
-
-## # A tibble: 4 × 2
-##   category meanvalue
-##   <chr>        <dbl>
-## 1 Team1      100066.
-## 2 Team2       99886.
-## 3 Team3       99921.
-## 4 Team4      100037.
 ```
-Creating custom labels for each of the four columns and summarizing the population mean of the storeids under each Team category. 
+A tibble: 4 × 2
+category    meanvalue
+  <chr>        <dbl>
+1 Team1      100066.
+2 Team2       99886.
+3 Team3       99921.
+4 Team4      100037.
+
 
 ```
-# Plotting 
+# Creating custom labels for each of the four columns and summarizing the population mean of the storeids under each Team category 
 ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
   geom_point() +
   labs(
@@ -273,7 +274,6 @@ ggplot(a_mean, aes(x = category, y = meanvalue, color = category)) +
 ```
 Scatterplot creation of the mean population size of the storeids under each region. The scatterplot shows that the storeids under Team1 are in a region that has the highest population mean. 'Category' which represents the different Teams is passed into the aes() function of ggplot() to use colour to define the points by different colours.
 
-Population mean of storeids by team:
 ![Image 2](https://github.com/bayyangjie/Applied-Statistical-Methods-and-Causal-Analysis/blob/main/Images/Picture%201.png?raw=true) <br> <br>
 
 
